@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Phone, Instagram, ChevronRight, Menu, X } from "lucide-react";
+import { MapPin, Phone, Instagram, ChevronRight, Menu, X, Sun, Moon, Users, Calendar, Clock, MessageSquare } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { SiWhatsapp } from "react-icons/si";
 
 import heroImg from "@/assets/hero.png";
 import macchiatoImg from "@/assets/macchiato.png";
@@ -13,6 +14,8 @@ import gatheredImg from "@/assets/gathered.png";
 import beansImg from "@/assets/beans.png";
 import menuRefImg from "@assets/image_1779953907653.png";
 
+const WHATSAPP_NUMBER = "251931190440";
+
 const FADE_UP = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] } }
@@ -22,9 +25,7 @@ const STAGGER = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.2
-    }
+    transition: { staggerChildren: 0.2 }
   }
 };
 
@@ -105,17 +106,216 @@ const menuData = {
   ]
 };
 
+function ReservationModal({ onClose }: { onClose: () => void }) {
+  const [form, setForm] = useState({ name: "", phone: "", date: "", time: "", guests: "2", notes: "" });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const msg = encodeURIComponent(
+      `Hello Fufut Coffee!\n\nI would like to make a reservation:\n\nName: ${form.name}\nPhone: ${form.phone}\nDate: ${form.date}\nTime: ${form.time}\nGuests: ${form.guests}${form.notes ? `\nNotes: ${form.notes}` : ""}\n\nThank you.`
+    );
+    setSubmitted(true);
+    setTimeout(() => {
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
+    }, 600);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20, scale: 0.97 }}
+        transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="bg-background text-foreground w-full max-w-lg relative overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="h-1 bg-primary w-full" />
+
+        <div className="p-8 md:p-10">
+          <button
+            data-testid="button-close-reservation"
+            onClick={onClose}
+            className="absolute top-6 right-6 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <X size={20} />
+          </button>
+
+          <AnimatePresence mode="wait">
+            {submitted ? (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="py-8 text-center"
+              >
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                  <SiWhatsapp className="text-primary" size={28} />
+                </div>
+                <h3 className="font-serif text-2xl text-primary mb-3">Redirecting to WhatsApp</h3>
+                <p className="font-sans text-muted-foreground text-sm">Your reservation details are ready to send. We will confirm within a few hours.</p>
+              </motion.div>
+            ) : (
+              <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <p className="font-sans tracking-[0.2em] uppercase text-xs text-muted-foreground mb-2">Fufut Coffee</p>
+                <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-8">Reserve a Table</h2>
+
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="col-span-2 md:col-span-1">
+                      <label className="font-sans text-xs tracking-widest uppercase text-muted-foreground block mb-2">Full Name</label>
+                      <input
+                        data-testid="input-reservation-name"
+                        name="name"
+                        value={form.name}
+                        onChange={handleChange}
+                        required
+                        placeholder="Your name"
+                        className="w-full bg-transparent border-b border-border text-foreground placeholder:text-muted-foreground px-0 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                      />
+                    </div>
+                    <div className="col-span-2 md:col-span-1">
+                      <label className="font-sans text-xs tracking-widest uppercase text-muted-foreground block mb-2">Phone</label>
+                      <input
+                        data-testid="input-reservation-phone"
+                        name="phone"
+                        value={form.phone}
+                        onChange={handleChange}
+                        required
+                        placeholder="+251 ..."
+                        className="w-full bg-transparent border-b border-border text-foreground placeholder:text-muted-foreground px-0 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="font-sans text-xs tracking-widest uppercase text-muted-foreground flex items-center gap-1.5 mb-2">
+                        <Calendar size={11} /> Date
+                      </label>
+                      <input
+                        data-testid="input-reservation-date"
+                        type="date"
+                        name="date"
+                        value={form.date}
+                        onChange={handleChange}
+                        required
+                        className="w-full bg-transparent border-b border-border text-foreground px-0 py-3 text-sm focus:outline-none focus:border-primary transition-colors [color-scheme:light] dark:[color-scheme:dark]"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-sans text-xs tracking-widest uppercase text-muted-foreground flex items-center gap-1.5 mb-2">
+                        <Clock size={11} /> Time
+                      </label>
+                      <input
+                        data-testid="input-reservation-time"
+                        type="time"
+                        name="time"
+                        value={form.time}
+                        onChange={handleChange}
+                        required
+                        className="w-full bg-transparent border-b border-border text-foreground px-0 py-3 text-sm focus:outline-none focus:border-primary transition-colors [color-scheme:light] dark:[color-scheme:dark]"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-sans text-xs tracking-widest uppercase text-muted-foreground flex items-center gap-1.5 mb-2">
+                        <Users size={11} /> Guests
+                      </label>
+                      <select
+                        data-testid="select-reservation-guests"
+                        name="guests"
+                        value={form.guests}
+                        onChange={handleChange}
+                        className="w-full bg-transparent border-b border-border text-foreground px-0 py-3 text-sm focus:outline-none focus:border-primary transition-colors appearance-none cursor-pointer"
+                      >
+                        {[1,2,3,4,5,6,7,8,10,12].map(n => (
+                          <option key={n} value={n} className="bg-background">{n} {n === 1 ? "guest" : "guests"}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="font-sans text-xs tracking-widest uppercase text-muted-foreground flex items-center gap-1.5 mb-2">
+                      <MessageSquare size={11} /> Special Requests
+                    </label>
+                    <textarea
+                      data-testid="input-reservation-notes"
+                      name="notes"
+                      value={form.notes}
+                      onChange={handleChange}
+                      rows={2}
+                      placeholder="Dietary requirements, occasion, seating preference..."
+                      className="w-full bg-transparent border-b border-border text-foreground placeholder:text-muted-foreground px-0 py-3 text-sm focus:outline-none focus:border-primary transition-colors resize-none"
+                    />
+                  </div>
+
+                  <button
+                    data-testid="button-submit-reservation"
+                    type="submit"
+                    className="w-full mt-2 flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#1ebe5d] text-white py-4 text-sm font-sans tracking-widest uppercase transition-colors duration-300"
+                  >
+                    <SiWhatsapp size={16} />
+                    Confirm via WhatsApp
+                  </button>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [reservationOpen, setReservationOpen] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("fufut-theme") === "dark" ||
+        (!localStorage.getItem("fufut-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    }
+    return false;
+  });
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add("dark");
+      localStorage.setItem("fufut-theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("fufut-theme", "light");
+    }
+  }, [isDark]);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (reservationOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [reservationOpen]);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -127,6 +327,29 @@ export default function Home() {
 
   return (
     <div className="bg-background text-foreground min-h-screen overflow-x-hidden selection:bg-primary selection:text-white">
+
+      {/* Reservation Modal */}
+      <AnimatePresence>
+        {reservationOpen && <ReservationModal onClose={() => setReservationOpen(false)} />}
+      </AnimatePresence>
+
+      {/* Floating WhatsApp Button */}
+      <motion.a
+        data-testid="link-whatsapp-float"
+        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello Fufut Coffee! I'd like to know more.")}`}
+        target="_blank"
+        rel="noreferrer"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.5, duration: 0.4 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] flex items-center justify-center shadow-xl text-white hover:bg-[#1ebe5d] transition-colors"
+        aria-label="Chat on WhatsApp"
+      >
+        <SiWhatsapp size={24} />
+      </motion.a>
+
       {/* Navigation */}
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${
@@ -136,29 +359,57 @@ export default function Home() {
         }`}
       >
         <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
-          <div className="font-serif text-2xl md:text-3xl tracking-wide font-semibold text-primary cursor-pointer" onClick={() => scrollTo('hero')}>
+          <div
+            className="font-serif text-2xl md:text-3xl tracking-wide font-semibold text-primary cursor-pointer"
+            onClick={() => scrollTo("hero")}
+          >
             FUFUT
           </div>
-          
+
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8 font-sans text-sm tracking-widest uppercase">
-            <button onClick={() => scrollTo('heritage')} className="hover:text-primary transition-colors">Heritage</button>
-            <button onClick={() => scrollTo('menu')} className="hover:text-primary transition-colors">Menu</button>
-            <button onClick={() => scrollTo('atmosphere')} className="hover:text-primary transition-colors">Experience</button>
-            <button onClick={() => scrollTo('gallery')} className="hover:text-primary transition-colors">Gallery</button>
-            <Button 
-              variant="outline" 
-              className="rounded-none border-primary text-primary hover:bg-primary hover:text-white transition-colors"
-              onClick={() => scrollTo('contact')}
+            <button onClick={() => scrollTo("heritage")} className="hover:text-primary transition-colors">Heritage</button>
+            <button onClick={() => scrollTo("menu")} className="hover:text-primary transition-colors">Menu</button>
+            <button onClick={() => scrollTo("atmosphere")} className="hover:text-primary transition-colors">Experience</button>
+            <button onClick={() => scrollTo("gallery")} className="hover:text-primary transition-colors">Gallery</button>
+
+            <button
+              data-testid="button-toggle-theme"
+              onClick={() => setIsDark(d => !d)}
+              className="w-9 h-9 flex items-center justify-center border border-border hover:border-primary hover:text-primary transition-colors"
+              aria-label="Toggle dark mode"
             >
-              Visit Us
+              {isDark ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
+
+            <Button
+              data-testid="button-reserve-nav"
+              variant="outline"
+              className="rounded-none border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+              onClick={() => setReservationOpen(true)}
+            >
+              Reserve a Table
             </Button>
           </div>
 
           {/* Mobile Nav Toggle */}
-          <button className="md:hidden text-foreground" onClick={() => setMobileMenuOpen(true)}>
-            <Menu size={24} />
-          </button>
+          <div className="md:hidden flex items-center gap-3">
+            <button
+              data-testid="button-toggle-theme-mobile"
+              onClick={() => setIsDark(d => !d)}
+              className="w-9 h-9 flex items-center justify-center border border-border/60 hover:border-primary hover:text-primary transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {isDark ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+            <button
+              data-testid="button-mobile-menu-open"
+              className="text-foreground"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -172,15 +423,26 @@ export default function Home() {
             transition={{ type: "tween", duration: 0.4 }}
             className="fixed inset-0 bg-background z-50 flex flex-col pt-24 px-8"
           >
-            <button className="absolute top-6 right-6 text-foreground" onClick={() => setMobileMenuOpen(false)}>
+            <button
+              data-testid="button-mobile-menu-close"
+              className="absolute top-6 right-6 text-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <X size={24} />
             </button>
             <div className="flex flex-col space-y-8 font-serif text-3xl">
-              <button onClick={() => scrollTo('heritage')} className="text-left hover:text-primary transition-colors">Heritage</button>
-              <button onClick={() => scrollTo('menu')} className="text-left hover:text-primary transition-colors">Menu</button>
-              <button onClick={() => scrollTo('atmosphere')} className="text-left hover:text-primary transition-colors">Experience</button>
-              <button onClick={() => scrollTo('gallery')} className="text-left hover:text-primary transition-colors">Gallery</button>
-              <button onClick={() => scrollTo('contact')} className="text-left hover:text-primary transition-colors">Contact</button>
+              <button onClick={() => scrollTo("heritage")} className="text-left hover:text-primary transition-colors">Heritage</button>
+              <button onClick={() => scrollTo("menu")} className="text-left hover:text-primary transition-colors">Menu</button>
+              <button onClick={() => scrollTo("atmosphere")} className="text-left hover:text-primary transition-colors">Experience</button>
+              <button onClick={() => scrollTo("gallery")} className="text-left hover:text-primary transition-colors">Gallery</button>
+              <button onClick={() => scrollTo("contact")} className="text-left hover:text-primary transition-colors">Contact</button>
+              <button
+                data-testid="button-reserve-mobile"
+                className="text-left text-primary"
+                onClick={() => { setMobileMenuOpen(false); setReservationOpen(true); }}
+              >
+                Reserve a Table
+              </button>
             </div>
           </motion.div>
         )}
@@ -188,22 +450,22 @@ export default function Home() {
 
       {/* 1. Hero Section */}
       <section id="hero" className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden">
-        <motion.div 
+        <motion.div
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 2, ease: "easeOut" }}
           className="absolute inset-0 z-0"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-10" />
-          <img 
-            src={heroImg} 
-            alt="Ethiopian Coffee Ceremony" 
+          <img
+            src={heroImg}
+            alt="Ethiopian Coffee Ceremony"
             className="w-full h-full object-cover object-center"
           />
         </motion.div>
-        
+
         <div className="container relative z-20 px-6 md:px-12 flex flex-col items-center text-center mt-16">
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -211,7 +473,7 @@ export default function Home() {
           >
             Addis Ababa
           </motion.p>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4 }}
@@ -219,7 +481,7 @@ export default function Home() {
           >
             Fufut Coffee
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.8 }}
@@ -231,13 +493,24 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1 }}
+            className="flex flex-col sm:flex-row gap-4"
           >
-            <Button 
-              size="lg" 
+            <Button
+              data-testid="button-explore-menu"
+              size="lg"
               className="bg-primary hover:bg-primary/90 text-white rounded-none px-8 py-6 text-sm tracking-widest uppercase"
-              onClick={() => scrollTo('menu')}
+              onClick={() => scrollTo("menu")}
             >
               Explore the Menu
+            </Button>
+            <Button
+              data-testid="button-reserve-hero"
+              size="lg"
+              variant="outline"
+              className="border-white text-white hover:bg-white hover:text-primary rounded-none px-8 py-6 text-sm tracking-widest uppercase bg-transparent"
+              onClick={() => setReservationOpen(true)}
+            >
+              Reserve a Table
             </Button>
           </motion.div>
         </div>
@@ -247,7 +520,7 @@ export default function Home() {
       <section id="heritage" className="py-24 md:py-32 bg-background relative">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            <motion.div 
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
@@ -264,8 +537,8 @@ export default function Home() {
                 From the careful roasting of the beans to the ceremonial pouring of the jebena, every detail is orchestrated to honor our heritage while embracing contemporary refinement.
               </motion.p>
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -282,7 +555,7 @@ export default function Home() {
       {/* 3. Signature Menu */}
       <section id="menu" className="py-24 md:py-32 bg-card border-y border-border">
         <div className="container mx-auto px-6 md:px-12">
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -291,15 +564,15 @@ export default function Home() {
           >
             <h2 className="text-4xl md:text-5xl font-serif text-primary mb-6">The Collection</h2>
             <p className="font-sans text-muted-foreground max-w-2xl mx-auto uppercase tracking-widest text-sm">
-              Curated Offerings • Prices in ETB
+              Curated Offerings — Prices in ETB
             </p>
           </motion.div>
 
           <Tabs defaultValue="Breakfast & Lunch" className="w-full">
             <TabsList className="w-full flex flex-wrap justify-center gap-4 bg-transparent h-auto p-0 mb-16">
               {Object.keys(menuData).map((category) => (
-                <TabsTrigger 
-                  key={category} 
+                <TabsTrigger
+                  key={category}
                   value={category}
                   className="data-[state=active]:bg-primary data-[state=active]:text-white rounded-none px-6 py-3 font-sans text-sm tracking-wider uppercase border border-border data-[state=active]:border-primary transition-all duration-300"
                 >
@@ -312,7 +585,7 @@ export default function Home() {
               <div className="lg:col-span-7">
                 {Object.entries(menuData).map(([category, items]) => (
                   <TabsContent key={category} value={category} className="mt-0 outline-none">
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
@@ -328,7 +601,7 @@ export default function Home() {
                   </TabsContent>
                 ))}
               </div>
-              
+
               <div className="lg:col-span-5 hidden lg:block relative">
                 <div className="sticky top-32">
                   <div className="aspect-[3/4] relative">
@@ -345,7 +618,7 @@ export default function Home() {
       <section id="atmosphere" className="py-24 md:py-32 bg-[#085B5A] text-white">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -354,8 +627,8 @@ export default function Home() {
             >
               <img src={interiorImg} alt="Cafe Interior" className="w-full h-full object-cover" />
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -371,9 +644,20 @@ export default function Home() {
               <motion.p variants={FADE_UP} className="text-lg text-white/80 leading-relaxed font-sans font-light mb-8">
                 Designed with Milanese precision and African warmth, our spaces invite you to linger. Deep emeralds, tactile woods, and soft ivory create a cocoon of comfort. It is a place for conversation, for creation, for simply being.
               </motion.p>
-              <motion.div variants={FADE_UP}>
-                <Button variant="outline" className="rounded-none border-white text-primary-foreground hover:bg-white hover:text-primary transition-colors px-8">
+              <motion.div variants={FADE_UP} className="flex gap-4">
+                <Button
+                  variant="outline"
+                  className="rounded-none border-white text-primary-foreground hover:bg-white hover:text-primary transition-colors px-8"
+                  onClick={() => scrollTo("gallery")}
+                >
                   View Gallery
+                </Button>
+                <Button
+                  data-testid="button-reserve-atmosphere"
+                  className="rounded-none bg-secondary hover:bg-secondary/90 text-secondary-foreground px-8"
+                  onClick={() => setReservationOpen(true)}
+                >
+                  Reserve Now
                 </Button>
               </motion.div>
             </motion.div>
@@ -385,7 +669,7 @@ export default function Home() {
       <section id="gallery" className="py-24 bg-background">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -393,8 +677,8 @@ export default function Home() {
             >
               <img src={foodImg} alt="Traditional Food" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -403,8 +687,8 @@ export default function Home() {
             >
               <img src={macchiatoImg} alt="Macchiato" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -412,8 +696,8 @@ export default function Home() {
             >
               <img src={steamImg} alt="Coffee Steam" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -429,7 +713,7 @@ export default function Home() {
       {/* 6. Testimonials */}
       <section className="py-24 md:py-32 bg-card border-y border-border overflow-hidden">
         <div className="container mx-auto px-6 md:px-12 text-center">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -437,7 +721,7 @@ export default function Home() {
           >
             What Our Guests Say
           </motion.h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
               {
@@ -445,7 +729,7 @@ export default function Home() {
                 author: "Sarah M."
               },
               {
-                text: "Fufut redefines luxury in Addis. The attention to detail—from the macchiato art to the interior lighting—is unmatched.",
+                text: "Fufut redefines luxury in Addis. The attention to detail — from the macchiato art to the interior lighting — is unmatched.",
                 author: "David L."
               },
               {
@@ -453,7 +737,7 @@ export default function Home() {
                 author: "Helen K."
               }
             ].map((testimonial, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -478,7 +762,7 @@ export default function Home() {
       <section id="contact" className="bg-[#1B1B1B] text-white pt-24 pb-12">
         <div className="container mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
-            <motion.div 
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -490,7 +774,7 @@ export default function Home() {
               <motion.p variants={FADE_UP} className="text-white/70 font-sans font-light text-lg mb-12 max-w-md">
                 Experience the finest Ethiopian coffee and culinary heritage. We await your arrival.
               </motion.p>
-              
+
               <div className="space-y-8 font-sans font-light">
                 <motion.div variants={FADE_UP} className="flex items-start gap-4">
                   <MapPin className="text-secondary mt-1 shrink-0" />
@@ -499,21 +783,37 @@ export default function Home() {
                     <p className="text-white/70">Addis Ababa, Ethiopia<br/>(See social media for exact directions)</p>
                   </div>
                 </motion.div>
-                
+
                 <motion.div variants={FADE_UP} className="flex items-start gap-4">
                   <Phone className="text-secondary mt-1 shrink-0" />
                   <div>
                     <h4 className="font-serif text-xl mb-2">Reservations & Inquiries</h4>
                     <div className="flex flex-col space-y-1 text-white/70">
-                      <a href="tel:0931190440" className="hover:text-white transition-colors">0931-19 04 40</a>
-                      <a href="tel:0953000200" className="hover:text-white transition-colors">0953-00 02 00</a>
-                      <a href="tel:0953022100" className="hover:text-white transition-colors">0953-02 21 00</a>
-                      <a href="tel:0994636382" className="hover:text-white transition-colors">0994-63 63 82</a>
-                      <a href="tel:0912934982" className="hover:text-white transition-colors">0912-93 49 82</a>
+                      <a href="tel:0931190440" data-testid="link-phone-1" className="hover:text-white transition-colors">0931-19 04 40</a>
+                      <a href="tel:0953000200" data-testid="link-phone-2" className="hover:text-white transition-colors">0953-00 02 00</a>
+                      <a href="tel:0953022100" data-testid="link-phone-3" className="hover:text-white transition-colors">0953-02 21 00</a>
+                      <a href="tel:0994636382" data-testid="link-phone-4" className="hover:text-white transition-colors">0994-63 63 82</a>
+                      <a href="tel:0912934982" data-testid="link-phone-5" className="hover:text-white transition-colors">0912-93 49 82</a>
                     </div>
                   </div>
                 </motion.div>
-                
+
+                <motion.div variants={FADE_UP} className="flex items-start gap-4">
+                  <SiWhatsapp className="text-secondary mt-1 shrink-0" size={20} />
+                  <div>
+                    <h4 className="font-serif text-xl mb-2">WhatsApp</h4>
+                    <a
+                      data-testid="link-whatsapp-contact"
+                      href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-white/70 hover:text-white transition-colors"
+                    >
+                      Chat with us on WhatsApp
+                    </a>
+                  </div>
+                </motion.div>
+
                 <motion.div variants={FADE_UP} className="flex items-start gap-4">
                   <Instagram className="text-secondary mt-1 shrink-0" />
                   <div>
@@ -523,10 +823,21 @@ export default function Home() {
                     </a>
                   </div>
                 </motion.div>
+
+                <motion.div variants={FADE_UP}>
+                  <button
+                    data-testid="button-reserve-contact"
+                    onClick={() => setReservationOpen(true)}
+                    className="mt-4 flex items-center gap-3 border border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground px-8 py-4 font-sans text-sm tracking-widest uppercase transition-colors duration-300"
+                  >
+                    Reserve a Table
+                    <ChevronRight size={16} />
+                  </button>
+                </motion.div>
               </div>
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -538,18 +849,22 @@ export default function Home() {
                 Subscribe for private event invitations and seasonal menu previews.
               </p>
               <div className="w-full max-w-sm flex">
-                <input 
-                  type="email" 
-                  placeholder="Email Address" 
+                <input
+                  data-testid="input-newsletter-email"
+                  type="email"
+                  placeholder="Email Address"
                   className="bg-transparent border-b border-white/30 text-white placeholder:text-white/50 px-4 py-3 w-full focus:outline-none focus:border-white transition-colors"
                 />
-                <button className="border-b border-white/30 px-4 hover:border-white transition-colors">
+                <button
+                  data-testid="button-newsletter-submit"
+                  className="border-b border-white/30 px-4 hover:border-white transition-colors"
+                >
                   <ChevronRight />
                 </button>
               </div>
             </motion.div>
           </div>
-          
+
           <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm font-sans text-white/50">
             <p>&copy; {new Date().getFullYear()} Fufut Coffee. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
