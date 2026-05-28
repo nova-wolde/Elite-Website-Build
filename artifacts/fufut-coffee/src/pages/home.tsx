@@ -553,59 +553,109 @@ export default function Home() {
       </section>
 
       {/* 3. Signature Menu */}
-      <section id="menu" className="py-24 md:py-32 bg-card border-y border-border">
+      <section id="menu" className="py-24 md:py-36 bg-card border-y border-border overflow-hidden">
         <div className="container mx-auto px-6 md:px-12">
+
+          {/* Editorial Header */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={FADE_UP}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h2 className="text-4xl md:text-5xl font-serif text-primary mb-6">The Collection</h2>
-            <p className="font-sans text-muted-foreground max-w-2xl mx-auto uppercase tracking-widest text-sm">
+            <p className="font-sans text-xs tracking-[0.4em] uppercase text-muted-foreground mb-6">Fufut Coffee</p>
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-px flex-1 max-w-[80px] bg-secondary/50" />
+              <span className="text-secondary text-lg">✦</span>
+              <div className="h-px flex-1 max-w-[80px] bg-secondary/50" />
+            </div>
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif text-foreground mb-5 leading-none">The Collection</h2>
+            <p className="font-sans text-muted-foreground uppercase tracking-[0.3em] text-xs">
               Curated Offerings — Prices in ETB
             </p>
           </motion.div>
 
           <Tabs defaultValue="Breakfast & Lunch" className="w-full">
-            <TabsList className="w-full flex flex-wrap justify-center gap-4 bg-transparent h-auto p-0 mb-16">
+            {/* Underline-style tabs */}
+            <TabsList className="w-full flex flex-wrap justify-center bg-transparent h-auto p-0 mb-16 border-b border-border gap-0">
               {Object.keys(menuData).map((category) => (
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="data-[state=active]:bg-primary data-[state=active]:text-white rounded-none px-6 py-3 font-sans text-sm tracking-wider uppercase border border-border data-[state=active]:border-primary transition-all duration-300"
+                  className="relative rounded-none px-5 py-4 font-sans text-xs tracking-[0.15em] uppercase text-muted-foreground bg-transparent border-0 shadow-none
+                    data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none
+                    hover:text-foreground transition-colors duration-300
+                    after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary after:scale-x-0 after:transition-transform after:duration-300
+                    data-[state=active]:after:scale-x-100"
                 >
                   {category}
                 </TabsTrigger>
               ))}
             </TabsList>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
               <div className="lg:col-span-7">
                 {Object.entries(menuData).map(([category, items]) => (
                   <TabsContent key={category} value={category} className="mt-0 outline-none">
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6"
+                      transition={{ duration: 0.45 }}
+                      className="space-y-0"
                     >
-                      {items.map((item, idx) => (
-                        <div key={idx} className="flex justify-between items-baseline border-b border-border/50 pb-4 group">
-                          <span className="font-serif text-lg text-foreground group-hover:text-primary transition-colors">{item.name}</span>
-                          <span className="font-sans text-sm text-secondary ml-4 whitespace-nowrap">{item.price}</span>
-                        </div>
-                      ))}
+                      {items.map((item, idx) => {
+                        const isSignature = ["Fut Special Gebeta", "Chiqina Tibs", "Traditional Coffee", "Special Chechebsa", "Special Burger", "Double Macchiato"].includes(item.name);
+                        return (
+                          <motion.div
+                            key={idx}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: idx * 0.03 }}
+                            className="group flex items-baseline gap-2 py-4 border-b border-border/40 hover:border-primary/30 transition-colors duration-300"
+                          >
+                            <div className="flex items-center gap-2 shrink-0">
+                              {isSignature && (
+                                <span className="text-[8px] text-secondary font-sans uppercase tracking-widest border border-secondary/50 px-1.5 py-0.5 leading-none">
+                                  Chef
+                                </span>
+                              )}
+                              <span className={`font-serif text-lg transition-colors duration-300 ${isSignature ? "text-foreground group-hover:text-primary" : "text-foreground/80 group-hover:text-primary"}`}>
+                                {item.name}
+                              </span>
+                            </div>
+                            <span className="flex-1 border-b border-dotted border-border/60 mb-1 mx-2" />
+                            <span className="font-sans text-sm font-light text-secondary whitespace-nowrap tabular-nums shrink-0">
+                              {item.price} <span className="text-[10px] text-muted-foreground tracking-wider">ETB</span>
+                            </span>
+                          </motion.div>
+                        );
+                      })}
                     </motion.div>
                   </TabsContent>
                 ))}
               </div>
 
+              {/* Sticky image column */}
               <div className="lg:col-span-5 hidden lg:block relative">
-                <div className="sticky top-32">
-                  <div className="aspect-[3/4] relative">
-                    <img src={menuRefImg} alt="Fufut Menu" className="w-full h-full object-cover shadow-2xl" />
+                <div className="sticky top-32 space-y-6">
+                  <div className="aspect-[3/4] relative overflow-hidden">
+                    <img src={menuRefImg} alt="Fufut Menu" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+                  </div>
+                  <div className="border border-border p-6 text-center">
+                    <p className="font-serif text-xl text-foreground mb-2">Order via WhatsApp</p>
+                    <p className="font-sans text-xs text-muted-foreground mb-4 tracking-wider">Place your order or ask about availability</p>
+                    <a
+                      data-testid="link-whatsapp-menu"
+                      href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello Fufut Coffee! I'd like to place an order.")}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white px-6 py-3 text-xs font-sans tracking-widest uppercase transition-colors duration-300 w-full justify-center"
+                    >
+                      <SiWhatsapp size={14} />
+                      Order Now
+                    </a>
                   </div>
                 </div>
               </div>
