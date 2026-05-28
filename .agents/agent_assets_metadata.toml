@@ -42,3 +42,51 @@ id = "1h2OZ1_1Ltj1ecOQRfO4l"
 uri = "file://artifacts/fufut-coffee/src/assets/beans.png"
 type = "image"
 title = "Coffee beans in hands"
+
+[[generated]]
+id = "h9k_m0cd-QA8DRmCrysAz"
+uri = "file://attached_assets/generated_images/samosa_pastries_and_crispy_6605.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "0rEQDRorVq4zTx3ZsBKVH"
+uri = "file://attached_assets/generated_images/ethiopian_beef_tibs_firfir_8be7.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "S6zDRvZh-eTWP7pWw-TXg"
+uri = "file://attached_assets/generated_images/ethiopian_breakfast_spread_on_065d.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "HroOL73Rm9Sb3Os91P0G7"
+uri = "file://attached_assets/generated_images/premium_cold_beverage_selection_6ff9.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "6WUswLfm-vU-C64bMckLo"
+uri = "file://attached_assets/generated_images/ethiopian_traditional_coffee_ceremony_f742.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "gq0tkPDQiqBHS4FReTq8z"
+uri = "file://attached_assets/generated_images/fut_special_gebeta_large_8e91.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "HnCCZAoENwXJ4qrWIv6K4"
+uri = "file://attached_assets/generated_images/chiqina_tibs_tender_ethiopian_74ac.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "W35muWchA4Wcc99mJD85O"
+uri = "file://attached_assets/generated_images/ethiopian_macchiato_a_perfectly_0a5d.png"
+type = "image"
+title = "generated_image"

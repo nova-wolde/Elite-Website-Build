@@ -14,6 +14,15 @@ import gatheredImg from "@/assets/gathered.png";
 import beansImg from "@/assets/beans.png";
 import menuRefImg from "@assets/image_1779953907653.png";
 
+import menuBreakfastImg from "@/assets/menu-breakfast.png";
+import menuTibsImg from "@/assets/menu-tibs.png";
+import menuSnacksImg from "@/assets/menu-snacks.png";
+import menuDrinksImg from "@/assets/menu-drinks.png";
+import menuBeveragesImg from "@/assets/menu-beverages.png";
+import menuGebetaImg from "@/assets/menu-gebeta.png";
+import menuChiqinaImg from "@/assets/menu-chiqina.png";
+import menuMacchiatoImg from "@/assets/menu-macchiato.png";
+
 const WHATSAPP_NUMBER = "251931190440";
 
 const FADE_UP = {
@@ -278,6 +287,20 @@ function ReservationModal({ onClose }: { onClose: () => void }) {
     </motion.div>
   );
 }
+
+const categoryImages: Record<string, string> = {
+  "Breakfast & Lunch": menuBreakfastImg,
+  "Snack & Sandwich": menuSnacksImg,
+  "Mains": menuTibsImg,
+  "Hot Drinks": menuDrinksImg,
+  "Beverages": menuBeveragesImg,
+};
+
+const signatureDishes = [
+  { name: "Fut Special Gebeta", price: "590", category: "Breakfast & Lunch", img: menuGebetaImg, desc: "A grand communal feast of layered wots and firfir" },
+  { name: "Chiqina Tibs", price: "370", category: "Breakfast & Lunch", img: menuChiqinaImg, desc: "Sautéed spiced beef with jalapeños and rosemary" },
+  { name: "Double Macchiato", price: "90", category: "Hot Drinks", img: menuMacchiatoImg, desc: "Rich Ethiopian espresso with a velvet crema" },
+];
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
