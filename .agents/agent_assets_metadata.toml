@@ -1,0 +1,44 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "-HdTJUW4VpoQGOlZRtEc_"
+uri = "file://artifacts/fufut-coffee/src/assets/hero.png"
+type = "image"
+title = "Hero image coffee ceremony"
+
+[[generated]]
+id = "XrlJ9c6bNeIY-m_kz7Mq1"
+uri = "file://artifacts/fufut-coffee/src/assets/macchiato.png"
+type = "image"
+title = "Macchiato art top down"
+
+[[generated]]
+id = "N1xe9OBBacjWEAFfySeSY"
+uri = "file://artifacts/fufut-coffee/src/assets/food.png"
+type = "image"
+title = "Traditional food on injera"
+
+[[generated]]
+id = "DnwfRLcsZt8MNnAsjLvmf"
+uri = "file://artifacts/fufut-coffee/src/assets/interior.png"
+type = "image"
+title = "Warm cafe interior"
+
+[[generated]]
+id = "LkpgjJ6-exFWtANYeNvXS"
+uri = "file://artifacts/fufut-coffee/src/assets/steam.png"
+type = "image"
+title = "Steam from coffee cup"
+
+[[generated]]
+id = "Va4TAzrnXkAOQlNZYkn9_"
+uri = "file://artifacts/fufut-coffee/src/assets/gathered.png"
+type = "image"
+title = "People gathered around coffee"
+
+[[generated]]
+id = "1h2OZ1_1Ltj1ecOQRfO4l"
+uri = "file://artifacts/fufut-coffee/src/assets/beans.png"
+type = "image"
+title = "Coffee beans in hands"

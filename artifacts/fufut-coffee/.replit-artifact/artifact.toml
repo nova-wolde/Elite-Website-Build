@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Fufut Coffee"
+version = "1.0.0"
+id = "artifacts/fufut-coffee"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20363
+
+[services.development]
+run = "pnpm --filter @workspace/fufut-coffee run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/fufut-coffee", "run", "build" ]
+publicDir = "artifacts/fufut-coffee/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20363"
+BASE_PATH = "/"

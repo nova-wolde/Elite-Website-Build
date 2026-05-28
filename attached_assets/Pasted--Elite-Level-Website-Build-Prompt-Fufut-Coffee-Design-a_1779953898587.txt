@@ -1,0 +1,416 @@
+# Elite-Level Website Build Prompt — Fufut Coffee
+
+Design and develop a world-class digital experience for **Fufut Coffee**, a premium Ethiopian coffeehouse brand.
+This should not feel like a template café website.
+It should feel like a luxury hospitality brand designed by a top-tier creative agency.
+
+The website must combine:
+
+* Premium branding
+* Ethiopian coffee heritage
+* Cinematic storytelling
+* Modern interaction design
+* High-end typography
+* Editorial-style layouts
+* Smooth immersive animations
+* Luxury café aesthetics
+
+Think:
+
+* Apple-level polish
+* Awwwards-quality UI/UX
+* Modern hospitality branding
+* Minimalism with cultural depth
+
+The final product should feel like a $10,000–$25,000 custom brand website.
+
+---
+
+# BRAND IDENTITY
+
+## Brand Name
+
+**Fufut Coffee**
+
+## Brand Personality
+
+* Elegant
+* Warm
+* Authentic
+* Sophisticated
+* Artistic
+* Cultural
+* Modern African luxury
+
+## Brand Story
+
+Fufut Coffee represents the heart of Ethiopian coffee culture — where coffee is not just a drink, but a social ritual, a tradition, and an experience.
+
+The website should communicate:
+
+* Ethiopian hospitality
+* Fresh traditional food
+* Artisan coffee
+* Community atmosphere
+* Premium café culture
+
+---
+
+# VISUAL DIRECTION
+
+Use the uploaded menu designs and visuals as primary brand references.
+
+The aesthetic should combine:
+
+* Modern luxury café branding
+* Ethiopian textures/patterns
+* Editorial magazine layouts
+* Rich earthy minimalism
+
+Avoid:
+
+* Generic coffee shop templates
+* Overcrowded layouts
+* Cheap gradients
+* Cartoonish UI
+* Excessive colors
+
+Everything should feel intentional, refined, and premium.
+
+---
+
+# COLOR SYSTEM
+
+Build a sophisticated design system inspired by the uploaded branding.
+
+## Primary Colors
+
+* Deep Teal → `#0B7A78`
+* Rich Turquoise → `#1AA6A5`
+* Dark Emerald Teal → `#085B5A`
+* Soft Aqua → `#67CDD3`
+* Warm Ivory → `#F7F3EE`
+* Rich Charcoal → `#1B1B1B`
+
+## Accent Colors
+
+* Ethiopian Coffee Brown → `#6A4325`
+* Soft Gold → `#D6B16B`
+
+## Usage Rules
+
+* Use teal as primary brand anchor
+* Use ivory backgrounds for luxury softness
+* Use charcoal for typography
+* Use gold sparingly for premium accents
+* Maintain high whitespace ratios
+
+---
+
+# TYPOGRAPHY SYSTEM
+
+Use premium typography pairings.
+
+## Heading Font
+
+Choose one:
+
+* Canela
+* Cormorant Garamond
+* Playfair Display
+
+## Body Font
+
+Choose one:
+
+* Inter
+* Suisse Intl
+* Manrope
+
+Typography should feel:
+
+* Editorial
+* Spacious
+* Luxurious
+* Clean
+* Timeless
+
+Use:
+
+* Large hero typography
+* Elegant line spacing
+* Strong hierarchy
+* Minimal text clutter
+
+---
+
+# WEBSITE EXPERIENCE
+
+The website should feel cinematic and immersive.
+
+Implement:
+
+* Smooth scrolling
+* Parallax transitions
+* Reveal-on-scroll animations
+* Soft hover interactions
+* Floating ambient effects
+* Elegant page transitions
+* High-end loading animations
+
+Animation style should feel:
+
+* Smooth
+* Slow
+* Intentional
+* Organic
+* Premium
+
+Never flashy.
+
+---
+
+# WEBSITE STRUCTURE
+
+## 1. HERO EXPERIENCE
+
+Create a cinematic fullscreen hero section.
+
+Include:
+
+* Large typography headline
+* Layered visuals
+* Atmospheric motion
+* Ethiopian coffee storytelling
+
+Headline example:
+
+> “Experience Ethiopian Coffee Culture.”
+
+Subheadline:
+
+> “Crafted traditions, authentic flavors, and modern café luxury.”
+
+Buttons:
+
+* Explore Menu
+* Visit Fufut
+
+Hero should include:
+
+* Coffee imagery
+* Steam/fog effects
+* Organic motion
+* Luxury composition
+
+The first screen must immediately feel premium and memorable.
+
+---
+
+## 2. BRAND STORY SECTION
+
+Create an editorial-style storytelling section.
+
+Focus on:
+
+* Ethiopian coffee heritage
+* Hospitality
+* Tradition
+* Community
+
+Use:
+
+* Asymmetrical layouts
+* Large imagery
+* Layered text blocks
+* Cinematic spacing
+
+This section should emotionally connect users to the brand.
+
+---
+
+## 3. SIGNATURE MENU EXPERIENCE
+
+Do NOT create a plain restaurant menu.
+
+Instead:
+
+* Design interactive premium menu cards
+* Use beautiful food photography
+* Add subtle hover states
+* Create category transitions
+
+Menu categories:
+
+* Breakfast
+* Lunch
+* Traditional Ethiopian Dishes
+* Hot Drinks
+* Burgers & Sandwiches
+* Beverages
+
+Highlight:
+
+* Traditional Coffee
+* Macchiato
+* Chechebsa
+* Tibs Firfir
+* Special Burger
+* Special Tea
+
+Display prices elegantly in ETB.
+
+---
+
+## 4. IMMERSIVE GALLERY
+
+Create a luxury visual gallery.
+
+Requirements:
+
+* Masonry layout
+* Cinematic crops
+* Hover zoom effects
+* Lightbox interactions
+* Motion transitions
+
+Gallery should showcase:
+
+* Coffee preparation
+* Ethiopian dishes
+* Interior atmosphere
+* Brand visuals
+* Cultural details
+
+The gallery should feel like a lifestyle campaign.
+
+---
+
+## 5. EXPERIENCE SECTION
+
+Create a section focused on atmosphere.
+
+Possible copy:
+
+* “More Than Coffee”
+* “A Space to Gather”
+* “Tradition Meets Modern Comfort”
+
+Include:
+
+* Ambient visuals
+* Warm lighting effects
+* Layered typography
+* Lifestyle-focused imagery
+
+---
+
+## 6. TESTIMONIALS
+
+Create elegant testimonial cards with:
+
+* Soft motion
+* Minimal UI
+* Clean typography
+* Premium spacing
+
+Reviews should feel authentic and sophisticated.
+
+---
+
+## 7. LOCATION + CONTACT
+
+Create a premium contact experience.
+
+Include:
+
+* Phone numbers
+* Map integration
+* Opening hours
+* QR-inspired design elements
+* WhatsApp CTA
+* Social links
+
+Style:
+
+* Dark immersive section
+* Elegant contrast
+* Minimal but informative
+
+---
+
+# UX/UI REQUIREMENTS
+
+The UI must be:
+
+* Mobile-first
+* Fully responsive
+* Accessibility-conscious
+* Fast-loading
+* SEO optimized
+
+Spacing should feel:
+
+* Expensive
+* Breathable
+* Intentional
+
+Use:
+
+* 12-column grid
+* Soft shadows
+* Rounded corners
+* Layered depth
+* Premium microinteractions
+
+---
+
+# TECH STACK
+
+Preferred stack:
+
+* Next.js
+* React
+* Tailwind CSS
+* Framer Motion
+* GSAP (optional)
+* Lenis smooth scrolling
+* Optimized image delivery
+* Component-based architecture
+
+Optional enhancements:
+
+* CMS integration
+* Online ordering
+* Reservation system
+* Dark/light adaptive mood
+* Motion-based storytelling
+
+---
+
+# PERFORMANCE REQUIREMENTS
+
+Target:
+
+* 90+ Lighthouse score
+* Optimized image loading
+* Lazy loading
+* Minimal CLS
+* Fast animations
+* Mobile performance priority
+
+---
+
+# DESIGN REFERENCES
+
+Visual inspiration should feel similar to:
+
+* High-end café brands
+* Luxury boutique hospitality websites
+* Editorial portfolio experiences
+* Modern African luxury branding
+
+The final experience should feel handcrafted, immersive, emotional, and unforgettable.
+
+This is not simply a coffee shop website.
+This is a premium digital brand experience for Fufut Coffee.
