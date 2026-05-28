@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { MapPin, Phone, Instagram, ChevronRight, Menu, X, Sun, Moon, Users, Calendar, Clock, MessageSquare } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -23,11 +23,15 @@ import menuGebetaImg from "@/assets/menu-gebeta.png";
 import menuChiqinaImg from "@/assets/menu-chiqina.png";
 import menuMacchiatoImg from "@/assets/menu-macchiato.png";
 
+import CoffeeRitual from "@/components/CoffeeRitual";
+
 const WHATSAPP_NUMBER = "251931190440";
+
+const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
 const FADE_UP = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } }
 };
 
 const STAGGER = {
@@ -146,7 +150,7 @@ function ReservationModal({ onClose }: { onClose: () => void }) {
         initial={{ opacity: 0, y: 30, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 20, scale: 0.97 }}
-        transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ duration: 0.4, ease: EASE }}
         className="bg-background text-foreground w-full max-w-lg relative overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
@@ -303,16 +307,33 @@ const signatureDishes = [
 ];
 
 export default function Home() {
+  const [activeCategory, setActiveCategory] = useState("Breakfast & Lunch");
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [reservationOpen, setReservationOpen] = useState(false);
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("fufut-theme") === "dark" ||
-        (!localStorage.getItem("fufut-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      const storedTheme = localStorage.getItem("fufut-theme");
+      if (storedTheme) {
+        return storedTheme === "dark";
+      }
+      const hour = new Date().getHours();
+      if (hour >= 19 || hour <= 5) return true; // evening/night = dark
+      return false; // daytime = light
     }
     return false;
   });
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  // Parallax transform with subtle bounds based on typical screen sizes
+  const bgX = useTransform(mouseX, [0, typeof window !== "undefined" ? window.innerWidth : 1000], [-15, 15]);
+  const bgY = useTransform(mouseY, [0, typeof window !== "undefined" ? window.innerHeight : 1000], [-15, 15]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    mouseX.set(e.clientX);
+    mouseY.set(e.clientY);
+  };
 
   useEffect(() => {
     const root = document.documentElement;
@@ -357,21 +378,28 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Floating WhatsApp Button */}
-      <motion.a
-        data-testid="link-whatsapp-float"
-        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello Fufut Coffee! I'd like to know more.")}`}
-        target="_blank"
-        rel="noreferrer"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1.5, duration: 0.4 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] flex items-center justify-center shadow-xl text-white hover:bg-[#1ebe5d] transition-colors"
-        aria-label="Chat on WhatsApp"
-      >
-        <SiWhatsapp size={24} />
-      </motion.a>
+      <div className="fixed bottom-6 right-6 z-50">
+        <motion.div
+          animate={{ scale: [1, 1.4, 1], opacity: [0.4, 0, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute inset-0 rounded-full bg-[#25D366]/30 pointer-events-none"
+        />
+        <motion.a
+          data-testid="link-whatsapp-float"
+          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello Fufut Coffee! I'd like to know more.")}`}
+          target="_blank"
+          rel="noreferrer"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1.5, duration: 0.4 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative w-14 h-14 rounded-full bg-[#25D366] flex items-center justify-center shadow-xl text-white hover:bg-[#1ebe5d] transition-colors"
+          aria-label="Chat on WhatsApp"
+        >
+          <SiWhatsapp size={24} />
+        </motion.a>
+      </div>
 
       {/* Navigation */}
       <nav
@@ -405,14 +433,16 @@ export default function Home() {
               {isDark ? <Sun size={15} /> : <Moon size={15} />}
             </button>
 
-            <Button
-              data-testid="button-reserve-nav"
-              variant="outline"
-              className="rounded-none border-primary text-primary hover:bg-primary hover:text-white transition-colors"
-              onClick={() => setReservationOpen(true)}
-            >
-              Reserve a Table
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                data-testid="button-reserve-nav"
+                variant="outline"
+                className="rounded-none border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+                onClick={() => setReservationOpen(true)}
+              >
+                Reserve a Table
+              </Button>
+            </motion.div>
           </div>
 
           {/* Mobile Nav Toggle */}
@@ -472,12 +502,13 @@ export default function Home() {
       </AnimatePresence>
 
       {/* 1. Hero Section */}
-      <section id="hero" className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden">
+      <section id="hero" onMouseMove={handleMouseMove} className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden">
         <motion.div
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 2, ease: "easeOut" }}
-          className="absolute inset-0 z-0"
+          style={{ x: bgX, y: bgY }}
+          className="absolute inset-0 z-0 scale-[1.05]"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-10" />
           <img
@@ -496,14 +527,24 @@ export default function Home() {
           >
             Addis Ababa
           </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="text-5xl md:text-7xl lg:text-9xl font-serif text-white mb-8 leading-[0.9]"
-          >
-            Fufut Coffee
-          </motion.h1>
+          
+          <h1 className="text-5xl md:text-7xl lg:text-9xl font-serif text-white mb-8 leading-[0.9] flex flex-wrap justify-center">
+            {"Fufut Coffee".split("").map((char, index) => (
+              <motion.span
+                key={index}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0.4 + index * 0.045,
+                  duration: 0.8,
+                  ease: EASE
+                }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            ))}
+          </h1>
+
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -518,23 +559,27 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 1 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <Button
-              data-testid="button-explore-menu"
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-white rounded-none px-8 py-6 text-sm tracking-widest uppercase"
-              onClick={() => scrollTo("menu")}
-            >
-              Explore the Menu
-            </Button>
-            <Button
-              data-testid="button-reserve-hero"
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-primary rounded-none px-8 py-6 text-sm tracking-widest uppercase bg-transparent"
-              onClick={() => setReservationOpen(true)}
-            >
-              Reserve a Table
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                data-testid="button-explore-menu"
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-white rounded-none px-8 py-6 text-sm tracking-widest uppercase w-full"
+                onClick={() => scrollTo("menu")}
+              >
+                Explore the Menu
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                data-testid="button-reserve-hero"
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-primary rounded-none px-8 py-6 text-sm tracking-widest uppercase bg-transparent w-full"
+                onClick={() => setReservationOpen(true)}
+              >
+                Reserve a Table
+              </Button>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -599,7 +644,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <Tabs defaultValue="Breakfast & Lunch" className="w-full">
+          <Tabs defaultValue="Breakfast & Lunch" onValueChange={setActiveCategory} className="w-full">
             {/* Underline-style tabs */}
             <TabsList className="w-full flex flex-wrap justify-center bg-transparent h-auto p-0 mb-16 border-b border-border gap-0">
               {Object.keys(menuData).map((category) => (
@@ -627,6 +672,26 @@ export default function Home() {
                       transition={{ duration: 0.45 }}
                       className="space-y-0"
                     >
+                      {/* Featured Signature Dishes row */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                        {signatureDishes.map((dish, i) => (
+                          <motion.div
+                            key={dish.name}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            className="flex items-center gap-4 border border-border p-3 hover:border-primary/50 transition-colors"
+                          >
+                            <img src={dish.img} alt={dish.name} className="w-20 h-20 object-cover" />
+                            <div>
+                              <p className="font-serif text-foreground leading-tight mb-1">{dish.name}</p>
+                              <p className="font-sans text-[10px] text-muted-foreground line-clamp-2 leading-snug">{dish.desc}</p>
+                              <p className="font-sans text-xs text-secondary mt-1">{dish.price} ETB</p>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+
                       {items.map((item, idx) => {
                         const isSignature = ["Fut Special Gebeta", "Chiqina Tibs", "Traditional Coffee", "Special Chechebsa", "Special Burger", "Double Macchiato"].includes(item.name);
                         return (
@@ -662,8 +727,19 @@ export default function Home() {
               {/* Sticky image column */}
               <div className="lg:col-span-5 hidden lg:block relative">
                 <div className="sticky top-32 space-y-6">
-                  <div className="aspect-[3/4] relative overflow-hidden">
-                    <img src={menuRefImg} alt="Fufut Menu" className="w-full h-full object-cover" />
+                  <div className="aspect-[3/4] relative overflow-hidden bg-muted">
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={activeCategory}
+                        src={categoryImages[activeCategory] || menuRefImg}
+                        alt={activeCategory}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.05 }}
+                        transition={{ duration: 0.4 }}
+                        className="w-full h-full object-cover absolute inset-0"
+                      />
+                    </AnimatePresence>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
                   </div>
                   <div className="border border-border p-6 text-center">
@@ -745,6 +821,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.03 }}
               viewport={{ once: true }}
               className="md:col-span-2 aspect-[16/9] relative group overflow-hidden"
             >
@@ -754,6 +831,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.03 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
               className="aspect-[3/4] md:aspect-auto relative group overflow-hidden"
@@ -764,6 +842,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.03 }}
               viewport={{ once: true }}
               className="aspect-square relative group overflow-hidden"
             >
@@ -773,6 +852,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.03 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
               className="md:col-span-2 aspect-[16/9] relative group overflow-hidden"
@@ -782,6 +862,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <CoffeeRitual />
 
       {/* 6. Testimonials */}
       <section className="py-24 md:py-32 bg-card border-y border-border overflow-hidden">
